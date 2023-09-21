@@ -1,0 +1,63 @@
+body {
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.grand-wrapper {
+    /* display: flex;
+    justify-content: center; */
+}
+
+.title-search-wrapper {
+    max-width: 100%;
+}
+
+.search-wrapper {
+    max-width: 100%;
+    /* display: flex; */
+}
+
+.weather-cards-grand-wrapper {
+    /* display: flex;
+    justify-content: space-around; */
+}
+
+.temp-emote-card {
+    border: solid #000000;
+    border-width: 1px;
+    padding: 10px 13px;
+    width: 20%;
+    text-align: center;
+    /* height: 2vh; */
+}
+.card-current {
+    margin: 0;
+    border: solid #000000;
+    border-width: 1px;
+    padding: 5px;
+    width: 20%;
+}
+
+.card-one, .card-two, .card-three {
+    margin: 0;
+    border: solid #000000;
+    border-width: 1px;
+    padding: 5px;
+    width: 15%;
+}
+h1, h2, h4, h6 {
+    margin: 0;
+}
+
+.tricard-wrapper {
+    /* display: flex;
+    justify-content: space-around; */
+}
+
+.emote-dayofweek-card {
+    border: solid #000000;
+    border-width: 1px;
+    padding: 10px 13px;
+    width: 45%;
+    text-align: center;
+    /* height: 2vh; */
+}
