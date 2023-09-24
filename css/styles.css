@@ -134,7 +134,7 @@ h1, h2, h4, h6 {
         justify-content: center;
     }
     .temp-emote-card {
-        width: 35%;
+        width: 30%;
     }
     .card-current {
         width: 30%;
@@ -155,4 +155,19 @@ h1, h2, h4, h6 {
         width: 65%;
     }
 
+}
+
+@media only screen and (min-width: 1440px) {
+    .temp-emote-card {
+        width: 20%;
+    }
+    .card-current {
+        width: 25%;
+    }
+    .card-one, .card-two, .card-three {
+        width: 18%;
+    }
+    .emote-dayofweek-card {
+        margin: 10px 235px;
+    }
 }
