@@ -14,11 +14,14 @@ body {
 
 .header {
     width: 100%;
+    text-align: center;
+    margin: 10px 0px;
 }
 
 /* Text input and Search button */
 .search-wrapper {
     max-width: 100%;
+    margin: 10px;
     display: flex;
     justify-content: space-around;
 }
@@ -45,6 +48,7 @@ body {
 }
 
 .temp-emote-card {
+    margin: 10px;
     border: solid #000000;
     border-width: 1px;
     padding: 10px 13px;
@@ -53,7 +57,7 @@ body {
     /* height: 2vh; */
 }
 .card-current {
-    margin: 0;
+    margin: 5px;
     border: solid #000000;
     border-width: 1px;
     padding: 5px;
@@ -62,12 +66,11 @@ body {
 
 .tricard-wrapper {
     max-width: 100%;
-    /* display: flex;
-    justify-content: space-around; */
+    display: flex;
 }
 
 .card-one, .card-two, .card-three {
-    margin: 0;
+    margin: 5px 10px;
     border: solid #000000;
     border-width: 1px;
     padding: 5px;
@@ -84,4 +87,72 @@ h1, h2, h4, h6 {
     width: 90%;
     text-align: center;
     /* height: 2vh; */
+}
+
+
+/* MEDIA QUERIES */
+
+/* Tablet and larger */
+@media only screen and (min-width: 768px) {
+
+    .emote-current-wrapper {
+        flex-direction: row-reverse;
+        justify-content: space-around;
+    }
+    .temp-emote-card {
+        width: 45%;
+    }
+    .card-current {
+        width: 35%;
+    }
+    .emote-dayofweek-card {
+        margin: 10px 20px;
+    }
+}
+
+
+/* Desktop and larger */
+@media only screen and (min-width: 1024px) {
+
+    .title-search-wrapper {
+        display: flex;
+    }
+    .header {
+        width: 40%;
+    }
+    .search-wrapper {
+        width: 75%;
+    }
+    .search-txt {
+        width: 75%;
+    }
+    .search-btn {
+        width: 20%;
+    }
+
+    .emote-current-wrapper {
+        justify-content: center;
+    }
+    .temp-emote-card {
+        width: 35%;
+    }
+    .card-current {
+        width: 30%;
+    }
+
+    .tricard-wrapper {
+        justify-content: center;
+    }
+    .card-one, .card-two, .card-three {
+        margin-top: 10px;
+        width: 22%;
+    }
+
+    .emote-dayofweek-card {
+        display: flex;
+        justify-content: center;
+        margin: 10px 160px;
+        width: 65%;
+    }
+
 }
