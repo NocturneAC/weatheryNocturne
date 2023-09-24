@@ -3,22 +3,42 @@ body {
 }
 
 .grand-wrapper {
-    /* display: flex;
-    justify-content: center; */
+    margin: 0;
+    max-width: 100%;
 }
 
+/* Header, Text input and Search button */
 .title-search-wrapper {
     max-width: 100%;
 }
 
-.search-wrapper {
-    max-width: 100%;
-    /* display: flex; */
+.header {
+    width: 100%;
 }
 
-.weather-cards-grand-wrapper {
+/* Text input and Search button */
+.search-wrapper {
+    max-width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.search-txt {
+    width: 60%;
+    height: 4vh;
+}
+.search-btn {
+    width: 30%;
+}
+
+.cards-grand-wrapper {
+    max-width: 100%;
     /* display: flex;
-    justify-content: space-around; */
+    align-items: center; */
+}
+
+/* Current temp and Emote card wrap */
+.emote-current-wrapper {
+    max-width: 100%;
 }
 
 .temp-emote-card {
@@ -37,6 +57,12 @@ body {
     width: 20%;
 }
 
+.tricard-wrapper {
+    max-width: 100%;
+    /* display: flex;
+    justify-content: space-around; */
+}
+
 .card-one, .card-two, .card-three {
     margin: 0;
     border: solid #000000;
@@ -46,11 +72,6 @@ body {
 }
 h1, h2, h4, h6 {
     margin: 0;
-}
-
-.tricard-wrapper {
-    /* display: flex;
-    justify-content: space-around; */
 }
 
 .emote-dayofweek-card {
