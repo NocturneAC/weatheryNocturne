@@ -7,18 +7,20 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="grand-wrapper">
-        <div class="title-search-wrapper">
-            <h1 class="header">Local Weather Report</h1>
-            <div class="search-wrapper">
-                <input type="text" placeholder="Enter City Name" class="search-txt" />
-                <input type="submit" value="Search" class="search-btn" />
+    <div class="app">
+        <form id="search-form" method="get">
+            <div class="search-bar search-bar-start">
+                <h1 class="title">Local Weather Report</h1>
+                <div class="search search-start">
+                    <input name="search-text" type="text" placeholder="Enter City Name" class="search-txt"/>
+                    <input type="submit" value="Search" class="search-btn"/>
+                </div>
             </div>
-        </div>
+        </form>
 
-        <div class="cards-grand-wrapper">
-            <div class="emote-current-wrapper">
-                <div class="temp-emote-card">
+        <div class="content hidden">
+            <div class="hero">
+                <div class="emote-card">
                 <h2>It's WEATHERY today!</h2>
                 </div>
                 <div class="card-current">
@@ -30,22 +32,22 @@
                     <h6>Chance of Precipitation: 41%</h6>
                 </div>
             </div>
-            <div class="tricard-wrapper">
-                <div class="card-one">
+            <div class="cards">
+                <div class="card">
                     <h4>Tuesday</h4>
                     <h1>78°</h1>
                     <h6>Today’s High: 85°</h6>
                     <h6>Today’s Low: 56°</h6>
                     <h6>Chance of Precipitation: 41%</h6>
                 </div>
-                <div class="card-two">
+                <div class="card">
                     <h4>Wednesday</h4>
                     <h1>78°</h1>
                     <h6>Today’s High: 85°</h6>
                     <h6>Today’s Low: 56°</h6>
                     <h6>Chance of Precipitation: 41%</h6>
                 </div>
-                <div class="card-three">
+                <div class="card">
                     <h4>Thursday</h4>
                     <h1>78°</h1>
                     <h6>Today’s High: 85°</h6>
@@ -53,12 +55,11 @@
                     <h6>Chance of Precipitation: 41%</h6>
                 </div>
             </div>
-                <div class="emote-dayofweek-card">
+                <div class="footer-content">
                 <h2>The WEATHERIEST day this week will be Thursday</h2>
                 </div>
         </div>
     </div>
-    
     <script src="./js/custom.js"></script>
 </body>
 </html>

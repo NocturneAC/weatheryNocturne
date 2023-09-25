@@ -1,173 +1,158 @@
+/* Browser Resets */
+h1, h2, h4, h6 {
+    margin: 0;
+}
 body {
     font-family:Arial, Helvetica, sans-serif;
 }
 
-.grand-wrapper {
-    margin: 0;
+.app {
     max-width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 1em;
 }
 
-/* Header, Text input and Search button */
-.title-search-wrapper {
-    max-width: 100%;
+.content {
+    display: flex;
+    gap: .5em;
+    flex-direction: column;
 }
 
-.header {
-    width: 100%;
+.title {
     text-align: center;
-    margin: 10px 0px;
 }
 
 /* Text input and Search button */
-.search-wrapper {
-    max-width: 100%;
-    margin: 10px;
+.search-bar {
     display: flex;
-    justify-content: space-around;
-}
-.search-txt {
-    width: 60%;
-    height: 4vh;
-}
-.search-btn {
-    width: 30%;
+    gap: .5em 2em;
+    flex-wrap: wrap;
 }
 
-.cards-grand-wrapper {
-    max-width: 100%;
-    /* display: flex;
-    align-items: center; */
+.search {
+    display: flex;
+    align-items: center;
+}
+
+.search-start {
+    flex-direction: column;
+    gap: 2em;
+}
+
+.search-bar-start {
+    flex-direction: column;
+    gap: 3em;
+}
+
+.search-txt {
+    padding: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+.search-btn {
+    padding: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none;
 }
 
 /* Current temp and Emote card wrap */
-.emote-current-wrapper {
-    max-width: 100%;
+.hero {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.temp-emote-card {
-    margin: 10px;
-    border: solid #000000;
-    border-width: 1px;
-    padding: 10px 13px;
-    width: 65%;
+.emote-card {
+    border: 1px solid #000000;
+    padding: .5em;
     text-align: center;
-    /* height: 2vh; */
 }
 .card-current {
-    margin: 5px;
-    border: solid #000000;
-    border-width: 1px;
-    padding: 5px;
-    width: 80%;
+    border: 1px solid #000000;
+    padding: .5em;
 }
 
-.tricard-wrapper {
-    max-width: 100%;
+.cards {
     display: flex;
+    justify-content: center;
+    gap: 1em;
 }
 
-.card-one, .card-two, .card-three {
-    margin: 5px 10px;
-    border: solid #000000;
-    border-width: 1px;
-    padding: 5px;
-    width: 60%;
-}
-h1, h2, h4, h6 {
-    margin: 0;
+.card {
+    border: 1px solid #000000;
+    padding: .5em;
 }
 
-.emote-dayofweek-card {
-    border: solid #000000;
-    border-width: 1px;
-    padding: 10px 13px;
-    width: 90%;
+.footer-content {
+    border: 1px solid #000000;
     text-align: center;
-    /* height: 2vh; */
+    padding: .5em;
+}
+
+.hero {
+    justify-content: center;
+    padding-left: 1em;
+    padding-right: 1em;
+    gap: 1em;
 }
 
 
-/* MEDIA QUERIES */
+.footer-content {
+    display: flex;
+    justify-content: center;
+}
+
 
 /* Tablet and larger */
 @media only screen and (min-width: 768px) {
-
-    .emote-current-wrapper {
+    .hero {
         flex-direction: row-reverse;
         justify-content: space-around;
     }
-    .temp-emote-card {
-        width: 45%;
+    .emote-card {
+        padding: 2em;
     }
     .card-current {
-        width: 35%;
+        padding-right: 4em;
     }
-    .emote-dayofweek-card {
+    .footer-content {
         margin: 10px 20px;
+    }
+
+    .search-start > .search-txt {
+        width: 80%;
+        max-width: 400px;
+
+    }
+
+    .search-start > .search-btn {
+        width: 30%;
+        max-width: 200px;
     }
 }
 
 
 /* Desktop and larger */
 @media only screen and (min-width: 1024px) {
-
-    .title-search-wrapper {
-        display: flex;
-    }
-    .header {
-        width: 40%;
-    }
-    .search-wrapper {
-        width: 75%;
-    }
-    .search-txt {
-        width: 75%;
-    }
     .search-btn {
-        width: 20%;
+        padding-right: 1em;
+        padding-left: 1em;
     }
 
-    .emote-current-wrapper {
-        justify-content: center;
+
+    .search-start > .search-txt {
+        width: 80%;
+        max-width: 400px;
     }
-    .temp-emote-card {
+
+    .search-start > .search-btn {
         width: 30%;
-    }
-    .card-current {
-        width: 30%;
-    }
-
-    .tricard-wrapper {
-        justify-content: center;
-    }
-    .card-one, .card-two, .card-three {
-        margin-top: 10px;
-        width: 22%;
-    }
-
-    .emote-dayofweek-card {
-        display: flex;
-        justify-content: center;
-        margin: 10px 160px;
-        width: 65%;
-    }
-
-}
-
-@media only screen and (min-width: 1440px) {
-    .temp-emote-card {
-        width: 20%;
-    }
-    .card-current {
-        width: 25%;
-    }
-    .card-one, .card-two, .card-three {
-        width: 18%;
-    }
-    .emote-dayofweek-card {
-        margin: 10px 235px;
+        max-width: 200px;
     }
 }
