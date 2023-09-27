@@ -21,11 +21,14 @@ let first = true;
         });
         const currentCardOld = document.querySelector('.card-current');
         currentCardOld.replaceWith(currentCard);
+
         const emoteCard = createEmoteCard(output.current);
         const emoteCardOld = document.querySelector(".emote-card");
         emoteCardOld.replaceWith(emoteCard);
-        // const footerContentOld = document.querySelector('.footer-content');
-        // footerContentOld.replaceWith(footerContent);
+        
+        const footerContent = createFooterCard(output.current);
+        const footerContentOld = document.querySelector('.footer-content');
+        footerContentOld.replaceWith(footerContent);
 
         Array.from(document.querySelectorAll('.card')).forEach((element, index) => element.replaceWith(cards[index +1]));
 
@@ -101,24 +104,24 @@ function createEmoteCard(current) {
     </div>`)
 }
 
-// function emoteDescriptor(temp, type) {
-//     if (type === "f") {
-//         if (temp > 75) {
-//             return "hottest"
-//         }
-//         if (temp >= 45 && temp <= 75) {
-//             return "most moderate";
-//         }
-//         if (temp < 45) {
-//         }
-//         return "coldest";
-//     }
-// }
+function emoteDescriptor(temp, type) {
+    if (type === "f") {
+        if (temp > 75) {
+            return "hottest"
+        }
+        if (temp >= 45 && temp <= 75) {
+            return "most moderate";
+        }
+        if (temp < 45) {
+        }
+        return "coldest";
+    }
+}
 
-// function createFooterCard(current) {
+function createFooterCard(current) {
 
-//     return elementFromHTML(`
-//     <div class="footer-content">
-//         <h2>The ${emoteDescriptor(current.temp_f, "f")} day this week will be ${forecastDay.date}</h2>
-//     </div>`)
-// }
+    return elementFromHTML(`
+    <div class="footer-content">
+        <h2>The ${emoteDescriptor(current.temp_f, "f")} day this week will be ${forecastDay.date}</h2>
+    </div>`)
+}
