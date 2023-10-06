@@ -286,7 +286,7 @@ function createForecastCard(forecastDay) {
         // check your work by replacing it altogether with forecastDay.date
         // converts string into a Date then uses the local date string to convert it into a weekday
         // e.g. if we have "2023-09-28",it should print "Thursday"
-        .replace('{{day}}', `${(new Date(forecastDay.date)).toLocaleDateString("en-US", {weekday: 'long'})}`);
+        .replace('{{day}}', (new Date(`${forecastDay.date}T00:00:00`)).toLocaleDateString("en-US", {weekday: 'long'}));
         // The new operator lets developers create an instance of a user-defined object type or of one of the built-in object types that has a constructor function.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new
         // basically, this creates a newly defined object
@@ -378,5 +378,5 @@ function hottestDay(output) {
     const hottestDay = days.find(forecastDay => forecastDay.day.maxtemp_f === maxTemp)
 
     // now it returns the day of the week based on our findings
-    return (new Date(hottestDay.date)).toLocaleDateString("en-US", {weekday: 'long'})
+    return (new Date(`${hottestDay.date}T00:00:00`)).toLocaleDateString("en-US", {weekday: 'long'})
 }
