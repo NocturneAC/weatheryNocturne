@@ -1,13 +1,41 @@
 let first = true;
-let previousSearches = [];
 // TODO: hide this
 const SECRET_KEY = 'e59f580fe1e84a549bd15830232609';
 
 (() => {
-    const searchForm = document.querySelector('#search-form');
-    searchForm.addEventListener('submit', async (event) => {
-        // stop form from submitting anything to the server
-        event.preventDefault();
+
+    // get the search city input from the DOM
+    const cityInput = document.querySelector('#city');
+    // variable to store the value to search for
+    let searchValue = "";
+    // addEventListener('change', (event) => {}) is similar to onChange((event) => {}) in react
+    // React: <input placeholder="Enter City" onChange={(event) => {}} />
+    // Vanilla: <input id="city" placeholder="Enter City" />
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event
+    // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+    cityInput.addEventListener('change', (event) => {
+        // read out the changed value
+        // save value for later search, when the search button is clicked
+        // since we don't want to search while the user is typing
+        searchValue = event.target.value;
+    });
+
+    function resetValue() {
+        // clear search value
+        searchValue = "";
+        // clear the input field of the searched value
+        cityInput.value = "";
+    }
+
+    // get the search button from the DOM
+    const searchButton = document.querySelector('#search');
+
+    // addEventListener('click', () => {}) is similar to onClick(() => {}) in react
+    // React: <input placeholder="Enter City" onChange={(event) => {}} />
+    // Vanilla: <input id="city" placeholder="Enter City" />
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event
+    // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+    searchButton.addEventListener('click', async () => {
 
         // transition from full page search view into weather view after searching for the first time
         if (first) {
@@ -17,21 +45,11 @@ const SECRET_KEY = 'e59f580fe1e84a549bd15830232609';
             first = false;
         }
 
-        // parse currently submitted form data
-        const data = new FormData(searchForm);
-
-        // read out the location that the user submitted
-        const location = data.get("location");
-        // store our last searches in an array
-        previousSearches = [location, ...previousSearches]
-            // only keep the last three
-            .slice(0, 2); 
-
         let output;
         try {
-            // call the weather api and get info on current location
-            output = await getWeather(location);
-            // if we typed in something that couldn't be found
+            // call the weather api and get info on current searched location
+            output = await getWeather(searchValue);
+            // if something is typed into the input field that cannot be found
             if (output.error) {
                 throw new Error(output.error);
             }
@@ -41,57 +59,90 @@ const SECRET_KEY = 'e59f580fe1e84a549bd15830232609';
             return;
         }
 
+        // clear the search value as well as the input field
+        resetValue();
+
         // sanity check
         if (!output) {
             return;
         }
 
+        // get the hero div from the DOM
+        // for later use to insert our cards
+        const heroElement =  document.querySelector('.hero');
 
-        // here we update our current card view
-        // we bind the data to a html string and create an html element
-        // which we then replace
+        // some sacrifices are necessary evil to keep the gods happy
+        // we need to clear the hero div of all its children
+        // so that we don't have duplicate cards
+        heroElement.innerHTML = "";
 
-        // bind data to html and create htmlelement
-        const currentCard = createCurrentCard(output);
-        // load the stale current card from dom
-        const currentCardOld = document.querySelector('.card-current');
-        // replace the current card with our newly created card
-        currentCardOld.replaceWith(currentCard);
-
-        // again updating the emote card view - same as before
+        // create emote card from template in html
+        // bind values to the created emote card from the output of the api
         const emoteCard = createEmoteCard(output);
-        const emoteCardOld = document.querySelector(".emote-card");
-        emoteCardOld.replaceWith(emoteCard);
+        // insert our newly created emote card into the DOM
+        // we insert it into the hero div
+        // by using appendChild we add it to the end of the hero div
+        // currently it is empty and thus the first child
+        heroElement.appendChild(emoteCard);
 
-        // again updating the hottest day card view - same as before
-        const footerContent = createFooterCard(output);
-        const footerContentOld = document.querySelector('.footer-content');
-        footerContentOld.replaceWith(footerContent);
+        // create current card from template in HTML
+        // bind values to the created current card from the output of the api
+        const currentCard = createCurrentCard(output);
+        // insert our newly created current card into the DOM
+        // insert it into the hero div
+        // by using appendChild, we add it to the end of the hero div
+        // this will be after the emote card
+        heroElement.appendChild(currentCard);
 
-        // create cards for the next three days
-        // iterate over all days
-        const cards = output.forecast.forecastday
-            // on index 0 sits our current day, we need to skip this
-            .filter((_, index) => index > 0)
-            // now bind the data to the view
-            .map(forecastDay => createForecastCard(forecastDay));
+        const cardsElement = document.querySelector('.cards');
 
-        // iterate over our card in the dom
-        // replace every card with our new cards
-        // since we skipped today,
-        // cards[0] contains tomorrow
-        // cards[1] contains the day after tomorrow
-        // cards[2] contains the day after the day after tomorrow
-        Array.from(
-            document.querySelectorAll('.card')
-        ).forEach((element, index) =>
-            // we replace the elements with the current day
-            element.replaceWith(cards[index])
-        );
+        // again some more sacrifices are necessary evil, to prove that we are worthy
+        // we need to clear the cards div of all its children
+        cardsElement.innerHTML = "";
 
-        // we clear the search form
-        searchForm.reset();
-    })
+        // now create our three footer cards
+        output.forecast.forecastday.forEach((forecastDay, index) => {
+            // skip the current day
+            // since we already have a card for that
+            // we created it above
+            if (index === 0) {
+                return;
+            }
+
+            // create a footer card from template in HTML
+            // bind values to the created footer card from the output of the api
+            const forecastCard = createForecastCard(forecastDay);
+            // insert our newly created footer card into the DOM
+            // the same way as we did with the current card above
+            // since this is an array of forecast days, we will append each day in the order as they come into our DOM
+            cardsElement.appendChild(forecastCard);
+        });
+        const contentElement = document.querySelector('.content');
+
+        // before we insert a new footer card, we need to get rid of the old one
+        // smite the old footer card with the power of the gods
+        // The optional chaining (?.) operator accesses an object's property or calls a function. If the object accessed or function called using this operator is undefined or null, the expression short circuits and evaluates to undefined instead of throwing an error.
+        // syntactic sugar!
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+        // so instead of doing this
+        /*
+            const footerElement = document.querySelector('.footer-content');
+            if (footerElement) {
+                footerElement.remove();
+            }
+         */
+        // we can do this
+        contentElement.querySelector('.footer-content')?.remove();
+
+        // we need to show the hottest day of the week
+        // we know all of them are hot, but only one can be shown ;)
+        const hottestDayCard = createFooterCard(output);
+
+        // we need to insert our hottest day card into the DOM
+        // this will be AFTER our content div
+        // appendChild will add it into the end of the content div
+        contentElement.appendChild(hottestDayCard);
+    });
 })();
 
 
@@ -100,7 +151,7 @@ async function getWeather(location) {
 
     // days=4 contains today, plus three additional days
     const response = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=${SECRET_KEY}&q=${location}&days=4`, options)
-    // if the api has an error for whatever reason display the error
+    // if the api has an error for whatever reason, display the error:
     if (!response.ok) {
         throw new Error(`${response.status} ${response.statusText}`);
     }
@@ -108,48 +159,37 @@ async function getWeather(location) {
     return await response.json();
 }
 
-// bind data from the api into our html
-// we create a html string first
-// then convert into a HTMLElement
-function createCurrentCard(weatherOutput) {
-    return elementFromHTML(`
-    <div class="card-current">
-        <h2>Current Temp</h2>
-        <h4>${weatherOutput.location.name}, ${weatherOutput.location.country}</h4>
-        <h1>${weatherOutput.current.temp_f}°</h1>
-        <h6>Today’s High: ${weatherOutput.forecast.forecastday[0].day.maxtemp_f}</h6>
-        <h6>Today’s Low: ${weatherOutput.forecast.forecastday[0].day.mintemp_f}</h6>
-        <h6>Chance of Precipitation: ${weatherOutput.forecast.forecastday[0].day.daily_chance_of_rain}%</h6>
-    </div>`);
+/*
+ * create an emote card
+ * reads out the template from the DOM
+ * clones the template into a DocumentFragment
+ * replaces the {{emote}} with the emote text
+ * returns the first div in the DocumentFragment
+ */
+function createEmoteCard(output) {
+    // find the template in our current DOM
+    const template = document.querySelector("#emote-card-template");
+
+    // The DocumentFragment interface represents a minimal document object that has no parent.
+    // It is used as a lightweight version of Document that stores a segment of a document structure comprised of nodes just like a standard document.
+    // The key difference is due to the fact that the document fragment isn't part of the active document tree structure. Changes made to the fragment don't affect the document.
+    // https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment
+    // clone is not an HTMLElement, but a DocumentFragment
+    const clone = template.content.cloneNode(true);
+
+    // so we need to find an HTMLElement
+    // in this case, the first div in the DocumentFragment
+    const emoteTextElement = clone.querySelector(".emote-text");
+    // replace the emote text placeholder with the actual emote text
+    emoteTextElement.textContent = emoteTextElement
+        .textContent
+        .replace('{{emote-text}}', `It's ${emote(output.forecast.forecastday[0].day.maxtemp_f)} today!`);
+
+    // return the first div in the DocumentFragment
+    return clone.firstElementChild;
 }
 
-// bind data from the api into our html
-// we create a html string first
-// then convert into a HTMLElement
-function createForecastCard(forecastDay) {
-    // FOR LINE 64, if the applied code doesn't work, replace with (new Date("2023-09-28")).toLocaleDateString("en-US", { weekday: 'long' }), check your work by replacing it altogether with forecastDay.date
-
-    return elementFromHTML(`
-    <div class="card">
-        <h4>${(new Date(forecastDay.date)).toLocaleDateString("en-US", {weekday: 'long'})}</h4>
-        <h1>${forecastDay.day.avgtemp_f}°</h1>
-        <h6>High: ${forecastDay.day.maxtemp_f}</h6>
-        <h6>Low: ${forecastDay.day.mintemp_f}</h6>
-        <h6>Chance of Precipitation: ${forecastDay.day.daily_chance_of_rain}%</h6>
-    </div>`)
-}
-
-
-// bind data from the api into our html
-// we create a html string first
-// then convert into a HTMLElement
-function elementFromHTML(html) {
-    const template = document.createElement('template');
-    template.innerHTML = html;
-    return template.content.firstElementChild;
-}
-
-// check what emote text we should use
+// check what emote text should be used:
 function emote(temp) {
     if (temp > 75) {
         return "hot"
@@ -162,37 +202,181 @@ function emote(temp) {
     return "cold";
 }
 
-// bind data from the api into our html
-// we create a html string first
-// then convert into a HTMLElement
-function createEmoteCard(output) {
-    const emoteText = emote(output.forecast.forecastday[0].day.maxtemp_f);
-    return elementFromHTML(`
-    <div class="emote-card ${emoteText}">
-        <h2>It's ${emoteText} today!</h2>
-    </div>`)
+
+/*
+ * create a current card
+ * reads out the template from the DOM
+ * clones the template into a DocumentFragment
+ * replaces all the placeholder content with the api output
+ * returns the first div in the DocumentFragment
+ */
+function createCurrentCard(output) {
+
+    // find the template in our current DOM
+    const template = document.querySelector("#card-current-template");
+
+    // clone is not an HTMLElement, but a DocumentFragment
+    const clone = template.content.cloneNode(true);
+
+    // so we need to find an HTMLElement
+    // in this case, the first div in the DocumentFragment
+
+    // first replace the city with the current city
+    const city = clone.querySelector(".city");
+    // look for the {{city}} placeholder and replace it with the actual city
+    // textContent is the text of the element, so we can look for the placeholder and replace it with the actual city:
+    city.textContent = city
+        .textContent
+        .replace('{{city}}', `${output.location.name}, ${output.location.country}`);
+
+    // replace current temp - same as above
+    const currentTemp = clone.querySelector(".current-temp");
+    currentTemp.textContent = currentTemp
+        .textContent
+        .replace('{{current-temp}}', `${output.current.temp_f}°`);
+
+    // replace max temp - same as above
+    const maxTemp = clone.querySelector(".max-temp");
+    maxTemp.textContent = maxTemp
+        .textContent
+        .replace('{{max-temp}}', `${output.forecast.forecastday[0].day.maxtemp_f}°`);
+
+    // replace min temp - same as above
+    const minTemp = clone.querySelector(".min-temp");
+    minTemp.textContent = minTemp
+        .textContent
+        .replace('{{min-temp}}', `${output.forecast.forecastday[0].day.mintemp_f}°`);
+
+    // replace chance - same as above
+    const chance = clone.querySelector(".chance");
+    chance.textContent = chance
+        .textContent
+        .replace('{{chance}}', `${output.forecast.forecastday[0].day.daily_chance_of_rain}%`);
+
+    // return the first div in the DocumentFragment
+    return clone.firstElementChild;
 }
+
+/*
+ * create a forecast card
+ * reads out the template from the DOM
+ * clones the template into a DocumentFragment
+ * replaces all the placeholder with the api output
+ * returns the first div in the DocumentFragment
+ */
+function createForecastCard(forecastDay) {
+    // find the template in our current DOM
+    const template = document.querySelector("#card-template");
+
+    // clone is not an HTMLElement, but a DocumentFragment
+    const clone = template.content.cloneNode(true);
+
+    // so we need to find an HTMLElement
+    // in this case, the first div in the DocumentFragment
+
+    // first replace the city with the current city
+    const day = clone.querySelector(".day");
+    // look for the {{day}} placeholder and replace it with the actual day
+    // textContent is the text of the element
+    // so we can look for the placeholder
+    // and replace it with the actual day
+    day.textContent = day
+        .textContent
+        // if the applied code doesn't work, replace with (new Date("2023-09-28")).toLocaleDateString("en-US", { weekday: 'long' }),
+        // check your work by replacing it altogether with forecastDay.date
+        // converts string into a Date then uses the local date string to convert it into a weekday
+        // e.g. if we have "2023-09-28",it should print "Thursday"
+        .replace('{{day}}', `${(new Date(forecastDay.date)).toLocaleDateString("en-US", {weekday: 'long'})}`);
+        // The new operator lets developers create an instance of a user-defined object type or of one of the built-in object types that has a constructor function.
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new
+        // basically, this creates a newly defined object
+
+    // replace current temp - same as above
+    const avgTemp = clone.querySelector(".avg-temp");
+    avgTemp.textContent = avgTemp
+        .textContent
+        .replace('{{avg-temp}}', `${forecastDay.day.avgtemp_f}°`);
+
+    // replace max temp - same as above
+    const maxTemp = clone.querySelector(".max-temp");
+    maxTemp.textContent = maxTemp
+        .textContent
+        .replace('{{max-temp}}', `${forecastDay.day.maxtemp_f}°`);
+
+    // replace min temp - same as above
+    const minTemp = clone.querySelector(".min-temp");
+    minTemp.textContent = minTemp
+        .textContent
+        .replace('{{min-temp}}', `${forecastDay.day.mintemp_f}°`);
+
+    // replace chance - same as above
+    const chance = clone.querySelector(".chance");
+    chance.textContent = chance
+        .textContent
+        .replace('{{chance}}', `${forecastDay.day.daily_chance_of_rain}%`);
+
+    // return the first div in the DocumentFragment
+    return clone.firstElementChild;
+}
+
+
+/*
+ * create a footer card
+ * reads out the template from the DOM
+ * clones the template into a DocumentFragment
+ * replaces {{hottest-day}} with the api output
+ * returns the first div in the DocumentFragment
+ */
+function createFooterCard(output) {
+
+    // find the template in our current DOM
+    const template = document.querySelector("#footer-template");
+
+    // clone is not an HTMLElement, but a DocumentFragment
+    const clone = template.content.cloneNode(true);
+
+    // so we need to find an HTMLElement
+    // in this case, the first div in the DocumentFragment:
+    const hottestDayElement = clone.querySelector(".hottest-day");
+
+    // replace the emote text placeholder with the actual emote text
+    hottestDayElement.textContent = hottestDayElement
+        .textContent
+        .replace('{{hottest-day}}', `The hottest day this week will be ${hottestDay(output)}`);
+
+    // return the first div in the DocumentFragment
+    return clone.firstElementChild;
+
+}
+
 
 // calculate what the hottest day is from all days
 function hottestDay(output) {
-    // read out the highest temp of each day
-    const temps = output.forecast.forecastday.map(forecastDay => forecastDay.day.maxtemp_f);
-    // get the max temp
-    const maxTemp = Math.max(...temps);
-    // look for the index of the hottest day
-    const hottestDayIndex = temps.findIndex(temp => temp === maxTemp);
-    // get the hottest day
-    const hottestDay = output.forecast.forecastday[hottestDayIndex];
-    // display the weekday name of the date
-    return (new Date(hottestDay.date)).toLocaleDateString("en-US", {weekday: 'long'})
-}
+    // contains all forecast for every day
+    const days = output.forecast.forecastday;
 
-// bind data from the api into our html
-// we create a html string first
-// then convert into a HTMLElement
-function createFooterCard(output) {
-    return elementFromHTML(`
-    <div class="footer-content">
-        <h2>The hottest day this week will be ${hottestDay(output)}</h2>
-    </div>`)
+    // we only need the temperature for each day
+    // read out the max temp for each day - because we want to know the HOTTEST day
+    // so maxtemp_f should be the correct value
+    const temps = days.map(forecastDay => forecastDay.day.maxtemp_f);
+
+    // The Math.max() static method returns the largest of the numbers given as input parameters
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max
+    // because we have an array, and Math.max does not like these we need to destruct the array
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+    // e.g. Math.max(...[1, 2, 3, 4]) is the same as Math.max(1, 2, 3, 4)
+    // or Math.max(...temps) is the same as Math.max(temps[0], temps[1], temps[2], temps[3])
+    // Spread syntax "expands" an array into its elements
+    // this is syntactic sugar
+    const maxTemp = Math.max(...temps);
+
+    // we now know the temperature of the hottest day
+    // so we can lookup the forecastDay for that temperature
+    // we use find to find the first element in the array that matches the condition
+    // The find() method of Array instances returns the first element in the provided array that satisfies the provided testing function. If no values satisfy the testing function, undefined is returned.
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+    const hottestDay = days.find(forecastDay => forecastDay.day.maxtemp_f === maxTemp)
+
+    // now it returns the day of the week based on our findings
+    return (new Date(hottestDay.date)).toLocaleDateString("en-US", {weekday: 'long'})
 }

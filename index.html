@@ -6,58 +6,63 @@
     <title>Weathery by Nocturne</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
+<!-- use a template to display card information -->
+<!-- The <template> HTML element is a mechanism for holding HTML that is not to be rendered immediately when a page is loaded but may be instantiated subsequently during runtime using JavaScript. -->
+<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template -->
+<!-- this handles what we wrote statically on the first pass -->
+
+<template id="emote-card-template">
+    <div class="emote-card">
+        <h2 class="emote-text">{{emote-text}}</h2>
+    </div>
+</template>
+
+<template id="card-current-template">
+    <div class="card-current">
+        <h2>Current Temp</h2>
+        <h4 class="city">{{city}}</h4>
+        <h1 class="current-temp">{{current-temp}}</h1>
+        <h6 class="max-temp">Today’s High: {{max-temp}}</h6>
+        <h6 class="min-temp">Today’s Low: {{min-temp}}</h6>
+        <h6 class="chance">Chance of Precipitation: {{chance}}</h6>
+    </div>
+</template>
+
+<template id="card-template">
+    <div class="card">
+        <h4 class="day">{{day}}</h4>
+        <h1 class="avg-temp">{{avg-temp}}</h1>
+        <h6 class="max-temp">Today’s High: {{max-temp}}</h6>
+        <h6 class="min-temp">Today’s Low: {{min-temp}}</h6>
+        <h6 class="chance">Chance of Precipitation: {{chance}}%</h6>
+    </div>
+</template>
+
+<template id="footer-template">
+    <div class="footer-content">
+        <h2 class="hottest-day">{{hottest-day}}</h2>
+    </div>
+</template>
+
+
+
 <body>
     <div class="app">
-        <form id="search-form" method="get">
-            <div class="search-bar search-bar-start">
-                <h1 class="title">Local Weather Report</h1>
-                <div class="search search-start">
-                    <input name="location" type="text" placeholder="Enter City Name" class="search-txt"/>
-                    <input type="submit" value="Search" class="search-btn"/>
-                </div>
+        <div class="search-bar search-bar-start">
+            <h1 class="title">Local Weather Report</h1>
+            <div class="search search-start">
+                <input id="city" type="text" placeholder="Enter City Name" class="search-txt" />
+                <button id="search" type="button" class="search-btn">Search</button>
             </div>
-        </form>
-
-        <div class="content hidden">
+        </div>
+        <div class="content">
             <div class="hero">
-                <div class="emote-card">
-                <h2>It's WEATHERY today!</h2>
-                </div>
-                <div class="card-current">
-                    <h2>Current Temp</h2>
-                    <h4>Oakland, CA USA</h4>
-                    <h1>78°</h1>
-                    <h6>Today’s High: 85°</h6>
-                    <h6>Today’s Low: 56°</h6>
-                    <h6>Chance of Precipitation: 41%</h6>
-                </div>
+
             </div>
             <div class="cards">
-                <div class="card">
-                    <h4>Tuesday</h4>
-                    <h1>78°</h1>
-                    <h6>Today’s High: 85°</h6>
-                    <h6>Today’s Low: 56°</h6>
-                    <h6>Chance of Precipitation: 41%</h6>
-                </div>
-                <div class="card">
-                    <h4>Wednesday</h4>
-                    <h1>78°</h1>
-                    <h6>Today’s High: 85°</h6>
-                    <h6>Today’s Low: 56°</h6>
-                    <h6>Chance of Precipitation: 41%</h6>
-                </div>
-                <div class="card">
-                    <h4>Thursday</h4>
-                    <h1>78°</h1>
-                    <h6>Today’s High: 85°</h6>
-                    <h6>Today’s Low: 56°</h6>
-                    <h6>Chance of Precipitation: 41%</h6>
-                </div>
+
             </div>
-                <div class="footer-content">
-                <h2>The WEATHERIEST day this week will be Thursday</h2>
-                </div>
         </div>
     </div>
     <script src="./js/custom.js"></script>
