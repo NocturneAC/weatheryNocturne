@@ -1,3 +1,12 @@
+const getAllCities =  async () => {
+    let cities = await fetch('http://localhost:3000/get-cities');
+    let citiesParsed = await cities.json();
+    console.log(citiesParsed);
+    return citiesParsed;
+}
+  getAllCities() // This function is called when app first loads, you will call this function in your JavaScript file. You might call it inside of another function.
+
+
 let first = true;
 // TODO: hide this
 const SECRET_KEY = 'e59f580fe1e84a549bd15830232609';
